@@ -11,6 +11,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Sanctum\PersonalAccessToken;
+use Exception;
 
 class User extends Authenticatable
 {
@@ -65,17 +66,23 @@ class User extends Authenticatable
      */
     public static function checkTokenExpiers($token)
     {
-        [$id,$token] = explode('|',$token,2);
-        $user = DB::table('personal_access_tokens')->find($id);
-        $remainigdays = self::remaningDays($user->expires_at); // Get Remaning days
-        // Return true if day left < 0
+        try{
+            [$id,$token] = explode('|',$token,2);
+            $user = DB::table('personal_access_tokens')->find($id);//if not found throw errow so catch throw try catch
+            $remainigdays = self::remaningDays($user->expires_at); // Get Remaning days
+            // Return true if day left < 0
 
-        if($remainigdays <= 0){
-           self::deleteToken($id);
-           return 'true';
-        }else{
-            return 'false';
+            if($remainigdays <= 0){
+               self::deleteToken($id);
+               return 'true';
+            }else{
+                return 'false';
+            }
         }
+        catch(Exception $e){ //If id is not found then return token expired status true
+            return 'true';
+        }
+
 
     }
     public static function deleteToken($id){

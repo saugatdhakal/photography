@@ -97,15 +97,11 @@ router.beforeEach(async (to, from, next) => {
             localStorage.removeItem('token');
             next({
                 path: '/login',
-                query: { redirect: to.fullPath },
-            });
-            next({
-                path: '/login',
                 // save the location we were at to come back later
                 query: { redirect: to.fullPath },
             });
         }
-        else {
+        else { // if not expire send to location where user want
             next();
         }
     }

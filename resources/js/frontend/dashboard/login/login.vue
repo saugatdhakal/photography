@@ -87,10 +87,13 @@ const rule = {
 const v$ = useVuelidate(rule, form);
 
 async function submitHandler() {
+    console.log('login start')
   const result = await v$.value.$validate();
   if (!result) {
     return null;
   }
+  console.log('login validated')
+
   auths.login(form);
 }
 </script>
