@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Photo\PhotoCreateRequest;
 use App\Models\Photo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class PhotoController extends Controller
 {
@@ -14,9 +17,21 @@ class PhotoController extends Controller
      */
     public function index()
     {
-        //
     }
-
+    public function allPhotos()
+    {
+        $photos = Photo::select('id', 'image_path', 'title')->paginate(15);
+        return $photos;
+    }
+    public function getPhoto($id)
+    {
+        if (!$id) {
+            return response()->json(array('error' => 'Failed to retrieve id'));
+        }
+        return Photo::with(['album'=>function($q){
+            $q->select('name','id');
+        }])->find($id);
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -33,13 +48,14 @@ class PhotoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PhotoCreateRequest $request)
     {
         $photo = new Photo();
-        $photo->title = $request->title;
-
-        $photo->getPhotoPath($request->photo);
-       
+        $photo->create($request);
+        return response()->json([
+            'status' => true,
+            'user' => $photo,
+        ]);
     }
 
     /**

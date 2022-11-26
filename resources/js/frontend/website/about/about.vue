@@ -1,5 +1,5 @@
 <template>
-  <main id="main" data-aos="fade" data-aos-delay="1500">
+  <main id="main" >
     <!-- ======= End Page Header ======= -->
     <div class="page-header d-flex align-items-center">
       <div class="container position-relative">
@@ -110,8 +110,9 @@
   <!-- End #main -->
 </template>
 
-<script>
-export default {};
+<script setup>
+
+
 </script>
 
 <style scoped>

@@ -85,7 +85,7 @@ h6 {
 }
 
 /*--------------------------------------------------------------
-  # Page Header
+  # Page Header # DON"T TOUCH
   --------------------------------------------------------------*/
 .page-header {
     padding: 120px 0 60px 0;
@@ -232,165 +232,8 @@ h6 {
 
 
 /*--------------------------------------------------------------
-  # Testimonials Section
-  --------------------------------------------------------------*/
-.testimonials {
-    margin-top: 80px;
-}
-
-.testimonials .testimonial-item {
-    box-sizing: content-box;
-    padding: 30px;
-    margin: 40px 30px;
-    background: var(--color-secondary);
-    min-height: 320px;
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    transition: 0.3s;
-}
-
-.testimonials .testimonial-item .stars {
-    margin-bottom: 15px;
-}
-
-.testimonials .testimonial-item .stars i {
-    color: #ffc107;
-    margin: 0 1px;
-}
-
-.testimonials .testimonial-item .testimonial-img {
-    width: 90px;
-    border-radius: 50%;
-    border: 5px solid #474a4d;
-    margin: 0 auto;
-}
-
-.testimonials .testimonial-item h3 {
-    font-size: 18px;
-    font-weight: bold;
-    margin: 10px 0 5px 0;
-    color: #fff;
-}
-
-.testimonials .testimonial-item h4 {
-    font-size: 14px;
-    color: rgba(255, 255, 255, 0.5);
-    margin: 0;
-}
-
-.testimonials .testimonial-item p {
-    font-style: italic;
-    margin: 0 auto 15px auto;
-}
-
-.testimonials .swiper-pagination {
-    margin-top: 20px;
-    position: relative;
-}
-
-.testimonials .swiper-pagination .swiper-pagination-bullet {
-    width: 12px;
-    height: 12px;
-    background-color: rgba(255, 255, 255, 0.2);
-    opacity: 1;
-}
-
-.testimonials .swiper-pagination .swiper-pagination-bullet-active {
-    background-color: rgba(255, 255, 255, 0.5);
-}
-
-.testimonials .swiper-slide {
-    opacity: 0.3;
-}
-
-@media (max-width: 1199px) {
-    .testimonials .swiper-slide-active {
-        opacity: 1;
-    }
-
-    .testimonials .swiper-pagination {
-        margin-top: 0;
-    }
-
-    .testimonials .testimonial-item {
-        margin: 40px 20px;
-    }
-}
-
-@media (min-width: 1200px) {
-    .testimonials .swiper-slide-next {
-        opacity: 1;
-        transform: scale(1.12);
-    }
-}
-
-/*--------------------------------------------------------------
   # Pricing Section
-  --------------------------------------------------------------*/
-.gallery {
-    margin-top: 40px;
-}
 
-.gallery .gallery-item {
-    position: relative;
-    overflow: hidden;
-    border-radius: 10px;
-}
-
-.gallery .gallery-item img {
-    transition: 0.3s;
-}
-
-.gallery .gallery-links {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    transition: all ease-in-out 0.3s;
-    background: rgba(0, 0, 0, 0.6);
-    z-index: 3;
-}
-
-.gallery .gallery-links .preview-link,
-.gallery .gallery-links .details-link {
-    font-size: 20px;
-    color: rgba(255, 255, 255, 0.5);
-    transition: 0.3s;
-    line-height: 1.2;
-    margin: 30px 8px 0 8px;
-}
-
-.gallery .gallery-links .preview-link:hover,
-.gallery .gallery-links .details-link:hover {
-    color: #fff;
-}
-
-.gallery .gallery-links .details-link {
-    font-size: 30px;
-    line-height: 0;
-}
-
-.gallery .gallery-item:hover .gallery-links {
-    opacity: 1;
-}
-
-.gallery .gallery-item:hover .preview-link,
-.gallery .gallery-item:hover .details-link {
-    margin-top: 0;
-}
-
-.gallery .gallery-item:hover img {
-    transform: scale(1.1);
-}
-
-.glightbox-clean .gslide-description {
-    background: #222425;
-}
-
-.glightbox-clean .gslide-title {
-    color: rgba(255, 255, 255, 0.8);
-    margin: 0;
-}
 
 /*--------------------------------------------------------------
   # Gallery Single Section
@@ -498,7 +341,7 @@ h6 {
     font-size: 26px;
     font-weight: 700;
     margin-bottom: 20px;
-    color: #fff;
+    color: black;
     font-family: var(--font-secondary);
 }
 
@@ -509,7 +352,7 @@ h6 {
 .gallery-single .portfolio-description .testimonial-item {
     padding: 30px 30px 0 30px;
     position: relative;
-    background: var(--color-secondary);
+    background: var(--color-background);
     height: 100%;
     margin-bottom: 50px;
 }
@@ -692,25 +535,6 @@ h6 {
     background: rgba(39, 167, 118, 0.8);
 }
 
-@-webkit-keyframes animate-loading {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    100% {
-        transform: rotate(360deg);
-    }
-}
-
-@keyframes animate-loading {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    100% {
-        transform: rotate(360deg);
-    }
-}
 
 /*--------------------------------------------------------------
   # Hero Section

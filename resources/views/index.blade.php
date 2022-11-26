@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
-    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Photography</title>
     <!-- Google Fonts -->
@@ -30,6 +30,9 @@
             csrfToken: '{{ csrf_token() }}'
         }
     </script>
+    <script
+        src="https://www.paypal.com/sdk/js?client-id=ATINnznas-9EV4CAT_7lCU-dUf9wWAp4Wezv_3QIY6013NF_8e6XkkBYv7Shea-G289uLsE9TMdm5hVU&enable-funding=venmo&currency=USD"
+        data-sdk-integration-source="button-factory"></script>
     @vite(['resources/js/app.js', 'resources/css/app.css', 'resources/js/main.js'])
 </head>
 

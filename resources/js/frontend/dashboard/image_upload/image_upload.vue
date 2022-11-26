@@ -3,15 +3,25 @@
     <div class="col-md-7 col-lg-6 m-2">
       <form enctype="multipart/form-data" @submit.prevent="submitHandler">
         <div class="albumCreate card card-body shadow">
-          <h3 style="text-align: center">Upload Image</h3>
+          <h3 style="text-align: center">
+            UPLOAD IMAGE
+            <i class="bi bi-card-image" style="font-size: larger"></i>
+          </h3>
           <div class="mt-1">
-            <label for="title"> Title </label>
-            <input
-              type="text"
-              id="title"
-              v-model="form.title"
-              class="form-control"
-            />
+            <label for="title" class="form-label"> Title </label>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text"
+                  ><i class="bi bi-card-heading"></i
+                ></span>
+              </div>
+              <input
+                type="text"
+                id="title"
+                v-model="form.title"
+                class="form-control"
+              />
+            </div>
           </div>
           <span
             style="color: red; margin-bottom: 5px; float: left"
@@ -21,19 +31,33 @@
             {{ error.$message }}</span
           >
           <div class="mt-1">
-            <label for="album">Album</label>
-            <div class="d-flex gap-1">
-              <select id="album" v-model="form.album" class="form-select">
-                <option value=" " selected disabled></option>
-                <option value="a1">a1</option>
-                <option value="a2">a2</option>
-              </select>
+            <label for="album" class="form-label">Album</label>
+
+            <div class="d-flex gap-2">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"
+                    ><i class="bi bi-journal-album"></i
+                  ></span>
+                </div>
+                <select id="album" v-model="form.album" class="form-select">
+                  <option value=" " selected disabled></option>
+                  <option
+                    :value="list.id"
+                    v-for="list in albums"
+                    :key="list.id"
+                  >
+                    {{ list.name }}
+                  </option>
+                </select>
+              </div>
               <button
                 type="button"
                 class="btn btn-primary"
                 data-bs-toggle="modal"
                 data-bs-target="#myModal"
                 title="Add Album"
+                style="height: 15%"
               >
                 +
               </button>
@@ -55,7 +79,6 @@
               type="file"
               @change="getImage"
               id="formFileMultiple"
-              multiple
             />
           </div>
           <span
@@ -66,13 +89,20 @@
             {{ error.$message }}</span
           >
           <div class="mt-1">
-            <label for="capturedDate">Captured Date</label>
-            <input
-              type="date"
-              v-model="form.capture_date"
-              id="capturedDate"
-              class="form-control"
-            />
+            <label for="capturedDate" class="form-label">Captured Date</label>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text"
+                  ><i class="bi bi-calendar3"></i
+                ></span>
+              </div>
+              <input
+                type="date"
+                v-model="form.capture_date"
+                id="capturedDate"
+                class="form-control"
+              />
+            </div>
           </div>
           <span
             style="color: red; margin-bottom: 5px; float: left"
@@ -82,14 +112,20 @@
             {{ error.$message }}</span
           >
           <div class="mt-1">
-            <label for="price">Price</label>
-            <input
-              type="number"
-              min="0"
-              v-model="form.price"
-              id="price"
-              class="form-control"
-            />
+            <label for="price" class="form-label">Price</label>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">$</span>
+              </div>
+              <input
+                type="number"
+                class="form-control"
+                min="0"
+                step="0.01"
+                v-model="form.price"
+                aria-label="Amount"
+              />
+            </div>
           </div>
           <span
             style="color: red; margin-bottom: 5px; float: left"
@@ -118,19 +154,20 @@
           >
 
           <div class="d-flex justify-content-center mt-2">
-            <button
-              type="submit"
-              class="btn imageUploadButton"
-              style="width: 100px"
-            >
-              Enter
+            <button type="submit" class="btn btn-success" style="width: 100px">
+              <div v-if="uploadingStatus">
+                <div class="spinner-border text-dark" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
+              <i class="bi bi-cloud-upload" v-else></i> Upload
             </button>
           </div>
         </div>
       </form>
     </div>
   </div>
-  <!-- Button to Open the Modal -->
+  <!-- Album Modal -->
   <form @submit.prevent="albumFormSubmit">
     <!-- The Modal -->
     <div class="modal" id="myModal">
@@ -140,7 +177,7 @@
           <div class="modal-header">
             <h4 class="modal-title">Add Category</h4>
             <button
-            @click="clearAlbumModel"
+              @click="clearAlbumModel"
               type="button"
               class="btn-close"
               data-bs-dismiss="modal"
@@ -196,7 +233,9 @@
             >
               Close
             </button>
-            <button type="submit" id="createbtn" class="btn btn-success">Create</button>
+            <button type="submit" id="createbtn" class="btn btn-success">
+              Create
+            </button>
           </div>
         </div>
       </div>
@@ -206,12 +245,19 @@
 
 <script setup>
 import { reactive, ref } from "@vue/reactivity";
+import { onMounted } from "@vue/runtime-core";
 import useVuelidate from "@vuelidate/core";
 import { required, maxLength } from "@vuelidate/validators";
 import repository from "../../../Backend/apis/repository";
-import router from "../../../Backend/router/router";
 
-// const image = ref(null);
+const { albumList, uploadImage } = repository();
+const uploadingStatus = ref(false);
+// List of albums fetch from the server
+const albums = ref({});
+onMounted(async () => {
+  albums.value = await albumList();
+});
+
 const form = reactive({
   title: "",
   album: "",
@@ -240,19 +286,22 @@ async function submitHandler(e) {
   if (!result) {
     return null;
   }
+  uploadingStatus.value = true; //Loading Status turn on
   let data = new FormData();
   data.append("photo", form.image);
   data.append("title", form.title);
-  data.append("album", form.album);
+  data.append("album_id", form.album);
   data.append("capture_date", form.capture_date);
   data.append("price", form.price);
   data.append("description", form.description);
-  let res = await repository.uploadImage({ params: data });
-  console.log(res);
+  let res = await uploadImage({ params: data });
+  if (res) {
+    uploadingStatus.value = false; //Loading Status turn off
+    toastr.success("Image Uploaded successfully");
+  }
 }
 
 // Albums Model Froms
-
 const albumForm = reactive({
   album_name: "",
   description: "",
@@ -276,26 +325,14 @@ async function albumFormSubmit() {
   if (!result) {
     return null;
   }
-  let res = await repository.createAlbum({ params: albumForm });
-  if(res){
-    // router.go();
-    toastr.success("hi")
-    $('#myModal').modal('hide');
-
-
+  let res = await createAlbum({ params: albumForm });
+  if (res) {
+    toastr.success("Album created successfully");
+    clearAlbumModel();
+    $("#myModal").modal("hide");
   }
-
-
-
 }
-
-
-
-</script>
-<script>
-$( "#createbtn" ).on( "click", function( event ) {
-  console.log('gekki')
-});
+//End Albums Model Froms
 </script>
 
 <style scoped>

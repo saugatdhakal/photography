@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import repository from '../apis/repository';
 import router from '../router/router';
-
+const {createSession,login,tokenExpired} = repository();
 export const authState = defineStore('authication', {
     state: () => ({
         user: null,
@@ -12,15 +12,15 @@ export const authState = defineStore('authication', {
         async login(user) {
             //Creating CSRF Session
             console.log('login start',user)
-            await repository.createSession();
-            this.user = await repository.login(user);//Login Request
+            await createSession();
+            this.user = await login(user);//Login Request
             localStorage.setItem('token', this.user.authorisation.token); // token in localstorage
             this.isAuth = true;
             router.push({ name: 'adminHome' });//Navigating into the admin home page
         },
         async checkTokenExpired() {
             console.log(localStorage.getItem('token'));
-            const res = await repository.tokenExpired(localStorage.getItem('token'));
+            const res = await tokenExpired(localStorage.getItem('token'));
             this.tokenExpired = res;
             return res;
         },

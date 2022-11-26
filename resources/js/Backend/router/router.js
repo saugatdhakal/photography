@@ -1,44 +1,59 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
+// Website
+import WebNavBar from "../../frontend/website/nav/nav-bar.vue";//
 import Home from '../../frontend/website/home/home.vue';
-import navBar from "../../frontend/website/nav/nav-bar.vue";//
+import About from '../../frontend/website/about/about.vue';
+import Service from '../../frontend/website/services/service.vue';
+import Contact from '../../frontend/website/contact/contact.vue';
+
 import adminNav from "../../frontend/dashboard/nav/admin-nav.vue";
 import { authState } from "../store/auth";
 const routes = [
-    //Home
+    //Website
     {
         path: '/',
         name: 'home',
         component: Home,
         meta: {
             requiresAuth: false,
-            pageLayout: navBar
+            pageLayout: WebNavBar
         }
+    },
+    {
+        path: '/photo/photoDetails/:id',
+        name: 'photoDetails',
+        component: () => import('../../frontend/website/imageContant/singleImageCotent.vue'),
+        meta: {
+            requiresAuth: false,
+            pageLayout: WebNavBar
+        },
+        props: true
     },
     {
         path: '/about',
         name: 'about',
-        component: () => import('../../frontend/website/about/about.vue'),
+        component:About,
         meta: {
             requiresAuth: false,
-            pageLayout: navBar
+            pageLayout: WebNavBar
         }
     },
     {
         path: '/contact',
         name: 'contact',
-        component: () => import('../../frontend/website/contact/contact.vue'),
+        component: Contact,
         meta: {
             requiresAuth: false,
-            pageLayout: navBar
+            pageLayout: WebNavBar
         }
     },
     {
         path: '/service',
         name: 'service',
-        component: () => import('../../frontend/website/services/service.vue'),
+        component: Service,
         meta: {
             requiresAuth: false,
-            pageLayout: navBar
+            pageLayout: WebNavBar
         }
     },
     {

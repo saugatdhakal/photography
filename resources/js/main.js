@@ -1,6 +1,6 @@
 
 document.addEventListener('DOMContentLoaded', () => {
-    "use strict";
+
 
     /**
      * Mobile nav toggle
@@ -28,8 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!navbarlink.hash) return;
         console.log(!navbarlink.hash)
-
-        
 
         navbarlink.addEventListener('click', () => {
             if (document.querySelector('.mobile-nav-active')) {
