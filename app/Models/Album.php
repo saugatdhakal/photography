@@ -13,4 +13,11 @@ class Album extends Model
         'name',
         'description'
     ];
+
+    public function createUpdateAlbum($request)
+    {
+        $this->name = $request->album_name;
+        $this->description = $request->description;
+        $this->save();
+    }
 }

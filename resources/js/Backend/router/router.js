@@ -1,7 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 import Home from '../../frontend/website/home/home.vue';
 import navBar from "../../frontend/website/nav/nav-bar.vue";//
-import adminNav from "../../frontend/dashboard/nav/nav.vue";
+import adminNav from "../../frontend/dashboard/nav/admin-nav.vue";
 import { authState } from "../store/auth";
 const routes = [
     //Home

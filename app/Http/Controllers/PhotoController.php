@@ -36,9 +36,10 @@ class PhotoController extends Controller
     public function store(Request $request)
     {
         $photo = new Photo();
-        $photo->getPhotoPath($request->photo);
+        $photo->title = $request->title;
 
-        return $photo;
+        $photo->getPhotoPath($request->photo);
+       
     }
 
     /**

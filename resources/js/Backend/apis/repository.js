@@ -17,5 +17,9 @@ export default{
     uploadImage({params}){
 
         return api.post('api/image',params);
+    },
+    // Albums
+    createAlbum({params}){
+        return api.post('api/album/create',params);
     }
 }

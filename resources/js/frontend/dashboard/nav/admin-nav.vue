@@ -97,7 +97,7 @@
           </li>
         </ul>
       </div>
-      <div class="bodyContent">
+      <div class="bodyContent" style="width:100%">
         <div class="container-fluid">
           <slot></slot>
         </div>
@@ -182,7 +182,7 @@ function largeNavClick() {
 @media only screen and (max-width: 600px) {
   /*Big smartphones [426px -> 600px]*/
   .sideBar {
-    width: 15%;
+    width: 18%;
   }
   .fullSideNav {
     width: 25%;
