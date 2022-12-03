@@ -21,7 +21,8 @@ return new class extends Migration
             $table->string('payer_id');
             $table->string('amount');
             $table->string('currency');
-            $table->enum('payment_status',[false,true]);
+            $table->date('payment_date');
+            $table->enum('payment_status', [false, true]);
             $table->timestamps();
         });
     }

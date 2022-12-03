@@ -4,82 +4,91 @@ namespace App\Http\Controllers;
 
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Srmklive\PayPal\Services\PayPal as PayPalClient;
 
 class TransactionController extends Controller
 {
+
+    public function handlePayment()
+    {
+        $provider = new PayPalClient;
+        // Getting headers form config/paypal.php
+        $provider->setApiCredentials(config('paypal'));
+        $paypalToken = $provider->getAccessToken();
+
+        $response = $provider->createOrder([
+            "intent" => "CAPTURE",
+            "application_context" => [
+                "return_url" => route('transaction.paymentSuccess'),
+                "cancel_url" => route('transaction.paymentCancel'),
+            ],
+            "purchase_units" => [
+                0 => [
+                    "amount" => [
+                        "currency_code" => "USD",
+                        "value" => "1"
+                    ]
+                ]
+            ]
+        ]);
+
+        if (isset($response['id']) && $response['id'] != null) {
+            // redirect to approve href
+            foreach ($response['links'] as $links) {
+                if ($links['rel'] == 'approve') {
+                    return $links['href'];
+                    // return redirect($links['href']);
+                }
+            }
+            return response([
+                'status' => 'error',
+                'message' => 'Something went wrong'
+            ], 401);
+        } else {
+            return
+                response([
+                    'status' => 'error',
+                    'message' => $response['message'] ?? 'Something went wrong.'
+                ], 401);
+        }
+    }
+    public function paymentSuccess(Request $request)
+    {
+        $provider = new PayPalClient;
+        $provider->setApiCredentials(config('paypal'));
+        $provider->getAccessToken();
+        $response = $provider->capturePaymentOrder($request['token']);
+        if (isset($response['status']) && $response['status'] == 'COMPLETED') {
+            Storage::disk('local')->put('paypal-response.txt',json_encode($response));
+            return redirect("/#/photo/payment/status/1");
+            // return response([
+            //     'status' => 'success',
+            //     'message' => 'Successfull transaction',
+            //     'response' => $response,
+            // ], 200);
+        } else {
+            return response([
+                'status' => 'fail',
+                'message' => 'Transaction failed'
+            ], 401);
+        }
+    }
     /**
-     * Display a listing of the resource.
+     * cancel transaction.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function paymentCancel(Request $request)
     {
-        //
+        return response([
+            'status' => 'fail',
+            'message' => 'Transaction Cancle'
+        ], 401);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Transaction  $transaction
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Transaction $transaction)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Transaction  $transaction
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Transaction $transaction)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Transaction  $transaction
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Transaction $transaction)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Transaction  $transaction
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Transaction $transaction)
-    {
-        //
+    public function paymentResponse(){
+        // return "hello";
+        return json_decode(Transaction::getPaymentResponse());
     }
 }

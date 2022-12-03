@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Transaction extends Model
 {
@@ -17,4 +18,10 @@ class Transaction extends Model
         'currency',
         'payment_status'
     ];
+
+    public static function getPaymentResponse(){
+
+        return Storage::disk('local')->get('example');
+
+    }
 }

@@ -30,9 +30,19 @@ const routes = [
         props: true
     },
     {
+        path: '/photo/payment/status/:id',
+        name: 'paymentStatus',
+        component: () => import('../../frontend/website/payment/transaction-status.vue'),
+        meta: {
+            requiresAuth: false,
+        },
+        props: true
+
+    },
+    {
         path: '/about',
         name: 'about',
-        component:About,
+        component: About,
         meta: {
             requiresAuth: false,
             pageLayout: WebNavBar

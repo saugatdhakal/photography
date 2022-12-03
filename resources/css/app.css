@@ -327,14 +327,14 @@ h6 {
 
 .gallery-single .portfolio-info .btn-visit {
     padding: 8px 40px;
-    background: var(--color-primary);
+    background: #ffc439;
     color: #fff;
-    border-radius: 50px;
+    border-radius: 5px;
     transition: 0.3s;
 }
 
 .gallery-single .portfolio-info .btn-visit:hover {
-    background: #2cbc85;
+    background: #f4ce74;
 }
 
 .gallery-single .portfolio-description h2 {

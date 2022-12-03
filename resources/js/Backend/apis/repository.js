@@ -18,11 +18,6 @@ const repository = () => {
     const tokenExpired = (token) => {
         return api.get('api/tokenStatus/' + token);
     }
-     /*
-    ****************************
-    ********LOGIN APIS END********
-    ****************************
-    */
 
     /*
     ****************************
@@ -36,11 +31,16 @@ const repository = () => {
     const getImageDetails = (id) => {
         return api.get('api/photo/' + id);
     }
-      /*
-    ****************************
-    ********WEBSITE APIS END********
-    ****************************
-    */
+    /*********Paypal Payment APIS*********/
+    const paypalPayment = () => {
+        return api.get('api/handle-payment');
+    }
+
+
+
+
+
+
 
     /*
         ****************************
@@ -69,6 +69,7 @@ const repository = () => {
         albumList,
         homeImages,
         getImageDetails,
+        paypalPayment
 
     }
 }

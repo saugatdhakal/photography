@@ -30,9 +30,7 @@
             csrfToken: '{{ csrf_token() }}'
         }
     </script>
-    <script
-        src="https://www.paypal.com/sdk/js?client-id=ATINnznas-9EV4CAT_7lCU-dUf9wWAp4Wezv_3QIY6013NF_8e6XkkBYv7Shea-G289uLsE9TMdm5hVU&enable-funding=venmo&currency=USD"
-        data-sdk-integration-source="button-factory"></script>
+
     @vite(['resources/js/app.js', 'resources/css/app.css', 'resources/js/main.js'])
 </head>
 
@@ -45,7 +43,7 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
-    </script>
+    </>
 
     {{-- JQuary --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"
