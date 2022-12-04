@@ -7,9 +7,9 @@
       <h1>Purchase Successful!</h1>
       <hr style="width:400px">
       <div>
-        <div class="d-flex mt-1">
-          <strong style="width: 180px">Transaction Number</strong>
-          <p>1234567894154556</p>
+        <div class="row ">
+          <strong class="col-md-6" style="width: 180px">Transaction Number</strong>
+          <p class="col-md-6">1234567894154556</p>
         </div>
         <div class="d-flex" >
           <strong style="width: 10px">Email</strong>
