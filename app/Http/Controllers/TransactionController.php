@@ -2,13 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Sevices\TransactionService;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
 
 class TransactionController extends Controller
 {
+
+    private TransactionService $transactionService;
+
+    public function __construct(TransactionService $transactionService)
+    {
+        $this->transactionService = $transactionService;
+    }
 
     public function handlePayment()
     {
@@ -60,8 +67,9 @@ class TransactionController extends Controller
         $provider->getAccessToken();
         $response = $provider->capturePaymentOrder($request['token']);
         if (isset($response['status']) && $response['status'] == 'COMPLETED') {
-            Storage::disk('local')->put('paypal-response.txt',json_encode($response));
-            return redirect("/#/photo/payment/status/1");
+            $transaction = new Transaction();
+
+            return redirect("/#/photo/payment/status/" + $transaction->id);
             // return response([
             //     'status' => 'success',
             //     'message' => 'Successfull transaction',
@@ -87,7 +95,8 @@ class TransactionController extends Controller
         ], 401);
     }
 
-    public function paymentResponse(){
+    public function paymentResponse()
+    {
         // return "hello";
         return json_decode(Transaction::getPaymentResponse());
     }
