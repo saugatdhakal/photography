@@ -34,6 +34,15 @@ class Photo extends Model
             set: fn ($value) => '/storage/images/'.$value
         );
     }
+    public static function getPhotoById($id)
+    {
+        if (!$id) {
+            return response()->json(array('error' => 'Failed to retrieve id'));
+        }
+        return Photo::with(['album'=>function($q){
+            $q->select('name','id');
+        }])->find($id);
+    }
 
 
     public function create($request)

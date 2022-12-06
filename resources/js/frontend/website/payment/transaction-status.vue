@@ -65,13 +65,17 @@
 import { ref } from "@vue/reactivity";
 import { onMounted } from "@vue/runtime-core";
 import { createPdfFromHtml } from "../../js/pdf.js";
-const props = defineProps(["id"]);
+const props = defineProps(["id"]); // CustomerTransaction Id
 const print = ref(null);
 onMounted(() => {
   setTimeout(() => {
     printTransaction();
   }, 1000);
+  
 });
+
+
+
 function printTransaction() {
   createPdfFromHtml(print.value);
   toastr.success("Image Uploaded successfully");

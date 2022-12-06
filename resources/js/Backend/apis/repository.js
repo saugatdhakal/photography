@@ -32,8 +32,8 @@ const repository = () => {
         return api.get('api/photo/' + id);
     }
     /*********Paypal Payment APIS*********/
-    const paypalPayment = () => {
-        return api.get('api/handle-payment');
+    const paypalPayment = (id) => {
+        return api.get('api/handle-payment/'+id);
     }
 
 

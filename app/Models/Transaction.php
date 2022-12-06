@@ -19,9 +19,5 @@ class Transaction extends Model
         'payment_status'
     ];
 
-    public static function getPaymentResponse(){
 
-        return Storage::disk('local')->get('example');
-
-    }
 }

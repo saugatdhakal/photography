@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('payment_id');
             $table->string('payer_id');
             $table->string('amount');
+            $table->string('address');
             $table->string('currency');
             $table->date('payment_date');
             $table->enum('payment_status', [false, true]);

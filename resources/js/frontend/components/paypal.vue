@@ -42,11 +42,18 @@
 <script setup>
 import repository from "../../Backend/apis/repository";
 const { paypalPayment } = repository();
+
+const props = defineProps({
+  photo_id: {
+    type: Number,
+    default: 0,
+    required: true,
+  },
+});
 async function processTransaction() {
-  console.log("payment start");
-  const res = await paypalPayment(); // payment start
-  const win =window.open(res, "_blank");
-  console.log(win);
+  const res = await paypalPayment(props.photo_id);
+    const win =window.open(res, "_blank");
+  //   console.log(win);
 }
 </script>
 

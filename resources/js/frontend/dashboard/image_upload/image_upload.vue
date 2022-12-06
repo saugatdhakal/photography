@@ -250,7 +250,7 @@ import useVuelidate from "@vuelidate/core";
 import { required, maxLength } from "@vuelidate/validators";
 import repository from "../../../Backend/apis/repository";
 
-const { albumList, uploadImage } = repository();
+const { albumList, uploadImage,createAlbum } = repository();
 const uploadingStatus = ref(false);
 // List of albums fetch from the server
 const albums = ref({});

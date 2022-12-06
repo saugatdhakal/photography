@@ -50,12 +50,13 @@
               <li>
                 <strong>PAYMENT VIA</strong>
                 <!-- Paypal button -->
-                <Paypal />
+                <Paypal v-if="imageDetails" :photo_id="imageDetails.id"/>
               </li>
             </ul>
           </div>
         </div>
-        {{ imageDetails }}
+        <p v-if="imageDetails">{{ imageDetails }}</p>
+
       </div>
     </div>
   </div>

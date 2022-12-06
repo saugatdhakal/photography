@@ -5,6 +5,7 @@ import Home from '../../frontend/website/home/home.vue';
 import About from '../../frontend/website/about/about.vue';
 import Service from '../../frontend/website/services/service.vue';
 import Contact from '../../frontend/website/contact/contact.vue';
+import imageUpload from '../../frontend/dashboard/image_upload/image_upload.vue';
 
 import adminNav from "../../frontend/dashboard/nav/admin-nav.vue";
 import { authState } from "../store/auth";

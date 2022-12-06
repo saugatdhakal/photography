@@ -13,10 +13,11 @@ Route::post('/login', [UserController::class, 'login']);
 Route::get('/photo/all', [PhotoController::class, 'allPhotos']);
 Route::get('/photo/{id}', [PhotoController::class, 'getPhoto']);
 
-Route::get('/handle-payment', [TransactionController::class, 'handlePayment'])->name('transaction.handlePayment');
+Route::get('/handle-payment/{id}', [TransactionController::class, 'handlePayment'])->name('transaction.handlePayment');
 Route::get('/cancel-payment', [TransactionController::class, 'paymentCancel'])->name('transaction.paymentCancel');
-Route::get('/payment-payment', [TransactionController::class, 'paymentSuccess'])->name('transaction.paymentSuccess');
+Route::get('/payment-success/{photo_id}', [TransactionController::class, 'paymentSuccess'])->name('transaction.paymentSuccess');
 Route::get('/payment-response',[TransactionController::class, 'paymentResponse'])->name('transaction.paymentResponse');
+
 
 // Dashboard Public Routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
