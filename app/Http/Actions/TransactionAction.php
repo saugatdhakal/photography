@@ -7,7 +7,6 @@ use App\Models\Transaction;
 
 class TransactionAction
 {
-
     /**
      * Store Response of  Paypal Success Transaction.
      * @return string $id
@@ -44,8 +43,8 @@ class TransactionAction
     /**
      * Store Response of  Paypal Success Transaction.
      * @return string $id
-     * @param object $transactionId
-     * @param object $photo_id
+     * @param string $transactionId
+     * @param string $photo_id
      */
     public function customerTransactionStore($transactionId, $photo_id): string
     {

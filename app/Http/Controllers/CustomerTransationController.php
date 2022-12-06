@@ -3,18 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Models\CustomerTransation;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 
 class CustomerTransationController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
+     * @param string
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function searchCustomerTransaction($id)
     {
-        //
+        $customerTransaction =CustomerTransation::with(['photo','transaction'])->find($id);
+        if(!$customerTransaction){
+            return response()->json(array('error' => "Can't find the customer by id {$id}"));
+        }
+        return $customerTransaction;
     }
 
     /**

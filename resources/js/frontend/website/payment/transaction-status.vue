@@ -9,32 +9,32 @@
       </div>
       <h1 class="success-text">Purchase Successful!</h1>
       <hr style="width: 350px" />
-      <div class="d-flex flex-column align-items-center">
+      <div class="d-flex flex-column align-items-center"  v-if="customerTransactionData.transaction">
         <div class="d-flex gap-3 flex-wrap">
           <strong>Transaction Number : </strong>
-          <p>1234567894154556</p>
+          <p>{{customerTransactionData.transaction.payment_id}}</p>
         </div>
         <div class="d-flex gap-3 flex-wrap">
           <strong>Payment Mode : </strong>
-          <p>1234567894154556</p>
+          <p> Online PayPal</p>
         </div>
         <div class="d-flex gap-3 flex-wrap">
           <strong>Email : </strong>
-          <p>Saugatdhakal5456465@gmail.com</p>
+          <p>{{customerTransactionData.transaction.cust_email}}</p>
         </div>
         <div class="d-flex gap-3 flex-wrap">
           <strong>Photo Name : </strong>
-          <p>Day in Night</p>
+          <p>{{customerTransactionData.photo.title}}</p>
         </div>
         <div class="d-flex gap-3 flex-wrap">
           <strong>Payment Date : </strong>
-          <p>2022/12/2</p>
+          <p>{{customerTransactionData.transaction.payment_date}}</p>
         </div>
         <hr style="width: 350px; margin: 0" />
 
         <div class="d-flex gap-3 flex-wrap mt-2">
           <strong>Total Amount : </strong>
-          <p>$123</p>
+          <p>${{customerTransactionData.transaction.amount}}</p>
         </div>
         <hr style="width: 350px; margin: 0" />
       </div>
@@ -57,24 +57,31 @@
         :to="{ name: 'home' }"
         >Continue Home <i class="bi bi-box-arrow-left"></i
       ></router-link>
+
     </div>
   </div>
+
 </template>
 
 <script setup>
 import { ref } from "@vue/reactivity";
 import { onMounted } from "@vue/runtime-core";
+import repository from "../../../Backend/apis/repository";
 import { createPdfFromHtml } from "../../js/pdf.js";
+
+const { searchCustomerTransaction } = repository();
 const props = defineProps(["id"]); // CustomerTransaction Id
-const print = ref(null);
-onMounted(() => {
+const print = ref(null); // Getting Html tags By Refs
+const customerTransactionData = ref({});
+
+onMounted(async () => {
   setTimeout(() => {
-    printTransaction();
+    // printTransaction(); // Print After 1 sec after page loaded automatically
   }, 1000);
-  
+
+  // Getting Data by Id
+  customerTransactionData.value = await searchCustomerTransaction(props.id);
 });
-
-
 
 function printTransaction() {
   createPdfFromHtml(print.value);

@@ -35,6 +35,10 @@ const repository = () => {
     const paypalPayment = (id) => {
         return api.get('api/handle-payment/'+id);
     }
+    // Success Page After Payment
+    const searchCustomerTransaction = ($id)=>{
+        return api.get('api/customer/transaction/'+$id);
+    }
 
 
 
@@ -69,7 +73,8 @@ const repository = () => {
         albumList,
         homeImages,
         getImageDetails,
-        paypalPayment
+        paypalPayment,
+        searchCustomerTransaction
 
     }
 }

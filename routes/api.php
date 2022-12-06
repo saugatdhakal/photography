@@ -1,22 +1,36 @@
 <?php
 
 use App\Http\Controllers\AlbumController;
+use App\Http\Controllers\CustomerTransationController;
 use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 
-
 Route::post('/login', [UserController::class, 'login']);
 
 // Websites API's
-Route::get('/photo/all', [PhotoController::class, 'allPhotos']);
-Route::get('/photo/{id}', [PhotoController::class, 'getPhoto']);
+Route::controller(PhotoController::class)
+    ->prefix('photo')
+    ->group(function () {
+        Route::get('/all',  'allPhotos');
+        Route::get('/{id}',  'getPhoto');
+    });
 
-Route::get('/handle-payment/{id}', [TransactionController::class, 'handlePayment'])->name('transaction.handlePayment');
-Route::get('/cancel-payment', [TransactionController::class, 'paymentCancel'])->name('transaction.paymentCancel');
-Route::get('/payment-success/{photo_id}', [TransactionController::class, 'paymentSuccess'])->name('transaction.paymentSuccess');
-Route::get('/payment-response',[TransactionController::class, 'paymentResponse'])->name('transaction.paymentResponse');
+Route::controller(TransactionController::class)
+    ->group(function () {
+        Route::get('/handle-payment/{id}',  'handlePayment')->name('transaction.handlePayment');
+        Route::get('/cancel-payment', 'paymentCancel')->name('transaction.paymentCancel');
+        Route::get('/payment-success/{photo_id}', 'paymentSuccess')->name('transaction.paymentSuccess');
+        Route::get('/payment-response', 'paymentResponse')->name('transaction.paymentResponse');
+    });
+
+
+Route::controller(CustomerTransationController::class)
+    ->prefix('customer')
+    ->group(function () {
+        Route::get('/transaction/{id}', 'searchCustomerTransaction');
+    });
 
 
 // Dashboard Public Routes

@@ -13,4 +13,12 @@ class CustomerTransation extends Model
         'transaction_id',
         'delivery_status'
     ];
+    
+    public function transaction()
+    {
+        return $this->belongsTo(Transaction::class);
+    }
+    public function photo(){
+        return $this->belongsTo(Photo::class);
+    }
 }
