@@ -3,13 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Photo\PhotoCreateRequest;
+use App\Http\Services\PhotoService;
 use App\Models\Photo;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 
 class PhotoController extends Controller
 {
+    private PhotoService $photoService;
+
+    public function __construct(PhotoService $photoService)
+    {
+        $this->photoService = $photoService;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -28,8 +35,8 @@ class PhotoController extends Controller
         if (!$id) {
             return response()->json(array('error' => 'Failed to retrieve id'));
         }
-        return Photo::with(['album'=>function($q){
-            $q->select('name','id');
+        return Photo::with(['album' => function ($q) {
+            $q->select('name', 'id');
         }])->find($id);
     }
     /**
@@ -48,14 +55,33 @@ class PhotoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(PhotoCreateRequest $request)
+    public function store(PhotoCreateRequest $requested)
     {
-        $photo = new Photo();
-        $photo->create($request);
-        return response()->json([
-            'status' => true,
-            'user' => $photo,
-        ]);
+        DB::beginTransaction();
+        try {
+            $photo = new Photo();
+            $photoDetails = $this->photoService->storePhoto($requested, $photo);
+            if (!$photoDetails) {
+                DB::rollBack();
+                return response()->json([
+                    'status' => False,
+                    'Message' => "Can't store photo",
+                    'data' => $photoDetails
+                ], 500);
+            }
+            DB::commit();
+            return response()->json([
+                'status' => true,
+                'message' => 'Image Uploaded Successfully',
+                'user' => $photo,
+            ], 201);
+        } catch (Exception $e) {
+            DB::rollback();
+            return response([
+                'status' => false,
+                'message' => "{$e->getMessage()}",
+            ], 500);
+        }
     }
 
     /**

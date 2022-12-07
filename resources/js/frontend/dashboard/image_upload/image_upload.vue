@@ -77,6 +77,7 @@
             <input
               class="form-control"
               type="file"
+              accept="image/png, image/gif, image/jpeg"
               @change="getImage"
               id="formFileMultiple"
             />
@@ -250,7 +251,7 @@ import useVuelidate from "@vuelidate/core";
 import { required, maxLength } from "@vuelidate/validators";
 import repository from "../../../Backend/apis/repository";
 
-const { albumList, uploadImage,createAlbum } = repository();
+const { albumList, uploadImage, createAlbum } = repository();
 const uploadingStatus = ref(false);
 // List of albums fetch from the server
 const albums = ref({});

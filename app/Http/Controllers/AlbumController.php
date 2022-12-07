@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AlbumRequest;
+use App\Http\Services\AlbumService;
 use App\Models\Album;
 use Exception;
 use Illuminate\Http\Request;
@@ -10,6 +11,13 @@ use Illuminate\Support\Facades\DB;
 
 class AlbumController extends Controller
 {
+
+    private AlbumService $albumService;
+
+    public function __construct(AlbumService $albumService)
+    {
+        $this->albumService = $albumService;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -32,7 +40,13 @@ class AlbumController extends Controller
     {
         try {
             $album = new Album();
-            $album->createUpdateAlbum($request);
+            $this->albumService->createUpdateAlbum($request,$album);
+            if(!$album){
+                return response()->json([
+                    'status' => 'Error',
+                    'message' =>'can not create a new album'
+                ], 500);
+            }
             return response()->json([
                 'status' => 'success',
                 'album' => $album,
