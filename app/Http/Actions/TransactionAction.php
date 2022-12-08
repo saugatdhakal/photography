@@ -9,10 +9,10 @@ class TransactionAction
 {
     /**
      * Store Response of  Paypal Success Transaction.
-     * @return string $id
-     * @param object $request
+     * @return Transaction $transaction
+     * @param Request $request
      */
-    public function transactionStore($request): string
+    public function transactionStore($request): Transaction
     {
         // Initilizing Variables
         $purchaseUnit = $request->purchase_units[0];
@@ -37,22 +37,21 @@ class TransactionAction
         $transaction->payment_date = date('Y-m-d h=>i=>s', strtotime($purchaseUnitCapture->create_time));
         $transaction->payment_status = true;
         $transaction->save();
-        return $transaction->id;
+        return $transaction;
     }
 
     /**
      * Store Response of  Paypal Success Transaction.
-     * @return string $id
+     * @return CustomerTransation $customerTransaction
      * @param string $transactionId
      * @param string $photo_id
      */
-    public function customerTransactionStore($transactionId, $photo_id): string
+    public function customerTransactionStore(string $transactionId, string $photo_id): CustomerTransation
     {
-
         $customerTransaction = new CustomerTransation();
         $customerTransaction->transaction_id = $transactionId;
         $customerTransaction->photo_id = $photo_id;
         $customerTransaction->save();
-        return $customerTransaction->id;
+        return $customerTransaction;
     }
 }

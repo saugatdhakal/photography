@@ -3,7 +3,9 @@
 namespace App\Http\Services;
 
 use App\Http\Actions\TransactionAction;
+use App\Models\CustomerTransation;
 use App\Models\Photo;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
 
@@ -14,107 +16,86 @@ class TransactionService extends TransactionAction
      * @param string $id Photo id
      * @return string href PayPal Link
      */
-    public function process($id): string
+    public function process(string $id): string
     {
-        try {
-            $photo = Photo::getPhotoById($id);
-            //* Initilizing PayPal
-            $provider = new PayPalClient;
-            $provider->getAccessToken();
-            //* Create Response Json to Pass
-            $response = $provider->createOrder([
-                "intent" => "CAPTURE",
-                "application_context" => [
-                    "return_url" => route('transaction.paymentSuccess', ['photo_id' => $photo->id]),
-                    "cancel_url" => route('transaction.paymentCancel'),
-                ],
-                "purchase_units" => [
-                    0 => [
-                        "items" => [
-                            0 => [
+        $photo = Photo::getPhotoById($id);
+        $provider = new PayPalClient;
+        $provider->getAccessToken();
+        //* Create Response Json to Pass
+        $response = $provider->createOrder([
+            "intent" => "CAPTURE",
+            "application_context" => [
+                "return_url" => route('transaction.paymentSuccess', ['photo_id' => $photo->id]),
+                "cancel_url" => route('transaction.paymentCancel'),
+            ],
+            "purchase_units" => [
+                0 => [
+                    "items" => [
+                        0 => [
 
-                                "name" => $photo->title,
-                                "ablum" => "Sky",
-                                "description" => "Good One",
-                                "quantity" => "1",
-                                "unit_amount" => [
-                                    "currency_code" => "USD",
-                                    "value" => "1"
-                                ]
+                            "name" => $photo->title,
+                            "ablum" => "Sky",
+                            "description" => "Good One",
+                            "quantity" => "1",
+                            "unit_amount" => [
+                                "currency_code" => "USD",
+                                "value" => "1"
                             ]
-                        ],
-                        "amount" => [
-                            "currency_code" => "USD",
-                            "value" => "1",
-                            "breakdown" => [
-                                "item_total" => [
-                                    "currency_code" => "USD",
-                                    "value" => "1.00"
-                                ]
+                        ]
+                    ],
+                    "amount" => [
+                        "currency_code" => "USD",
+                        "value" => "1",
+                        "breakdown" => [
+                            "item_total" => [
+                                "currency_code" => "USD",
+                                "value" => "1.00"
                             ]
                         ]
                     ]
                 ]
-            ]);
-            //* Checking Has Response has Id OR Not
-            if (isset($response['id']) && $response['id'] != null) {
-                //* redirect to approve href
-                foreach ($response['links'] as $links) {
-                    if ($links['rel'] == 'approve') {
-                        return $links['href'];
-                    }
-                }
-                return response([
-                    'status' => 'error',
-                    'message' => 'Something went wrong'
-                ], 401);
-            } else {
-                return
-                    response([
-                        'status' => 'error',
-                        'message' => $response['message'] ?? 'Something went wrong.'
-                    ], 401);
-            }
-        } catch (\Exception $ex) {
-            return response()->json(['error' => $ex->getMessage()], 500);
+            ]
+        ]);
+        //* Checking Has Response has Id OR Not
+        if (!isset($response['id']) || $response['id'] == null) {
+            throw new Exception("Can't find Response id!! :TransactionService", 500);
         }
+        //* redirect to approve href
+        foreach ($response['links'] as $links) {
+            if ($links['rel'] == 'approve') {
+                return $links['href'];
+            }
+        }
+        throw new Exception("Can't find link approve :TransactionService", 500);
     }
+
 
     /**
      * Initilizing and Requesting PayPal Order.
-     * @return Redirect-Links Success Pages
+     * @return CustomerTransation object
      * @param object $request PayPal response (token and id)
      * @param string $photo_id Photo Id
      */
-    public function success($request, $photo_id)
+    public function success($request, string $photo_id): CustomerTransation
     {
-        DB::beginTransaction();
-        try {
-            //* Initilizing PayPal
-            $provider = new PayPalClient;
-            $provider->getAccessToken();
-
-            //* Capturing PayPal Token for varification
-            $response = $provider->capturePaymentOrder($request['token']);
-
-            if (isset($response['status']) && $response['status'] == 'COMPLETED') {
-                //* Storing the value in DB after status is COMPLETED
-                $transactionId = (string)$this->transactionStore(json_decode(json_encode($response)));
-                $customerTransactionId = (string)$this->customerTransactionStore($transactionId, $photo_id);
-
-                DB::commit();
-                return redirect("/#/photo/payment/status/" . $customerTransactionId);
-            } else {
-                DB::rollback();
-                return response([
-                    'status' => 'fail',
-                    'message' => 'Transaction failed'
-                ], 401);
-            }
-        } catch (\Exception $ex) {
-            DB::rollback();
-            return response()->json(['error in success' => $ex->getMessage()], 500);
+        //* Initilizing PayPal
+        $provider = new PayPalClient;
+        $provider->getAccessToken();
+        //* Capturing PayPal Token for verification
+        $response = $provider->capturePaymentOrder($request['token']);
+        if (!isset($response['status']) || $response['status'] != 'COMPLETED') {
+            throw new Exception("Transaction status Failer ", 500);
         }
+        //* Storing the value in DB after status is COMPLETED
+        $transaction = $this->transactionStore(json_decode(json_encode($response)));
+        if (!$transaction) {
+            throw new Exception("Fail to Store Transaction ", 500);
+        }
+        $customerTransaction = $this->customerTransactionStore($transaction->id, $photo_id);
+        if (!$customerTransaction) {
+            throw new Exception('Fail to Store Customer Transaction', 500);
+        }
+        return $customerTransaction;
     }
     public function transactionFailure()
     {

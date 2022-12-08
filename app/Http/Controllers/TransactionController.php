@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Services\TransactionService;
 use App\Models\Transaction;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TransactionController extends Controller
 {
@@ -18,13 +20,17 @@ class TransactionController extends Controller
 
     /**
      * Start Paypal transaction
-     * @param Photo $id
-     * @return Paypal_PAYMENT_PORTAL_LINK
+     * @param string $id Photo Id
+     * @return href Paypal Page
      */
     public function handlePayment($id)
     {
-        // return $id;
-      return $this->transactionService->process($id);
+        try {
+            $link = $this->transactionService->process($id);
+            return $link;
+        } catch (\Exception $ex) {
+            return response()->json(['error' => $ex->getMessage()], 500);
+        }
     }
 
     /**
@@ -32,9 +38,20 @@ class TransactionController extends Controller
      * @param Photo $id
      * @return Paypal_PAYMENT_PORTAL_LINK
      */
-    public function paymentSuccess(Request $request,$photo_id)
+    public function paymentSuccess(Request $request, $photo_id)
     {
-      return $this->transactionService->success($request,$photo_id);
+        DB::beginTransaction();
+        try {
+            $customerTransaction = $this->transactionService->success($request, $photo_id);
+            DB::commit();
+            return redirect("/#/photo/payment/status/" . $customerTransaction->id);
+        } catch (Exception $ex) {
+            DB::rollback();
+            return response()->json([
+                'status' => false,
+                'message' => $ex->getMessage()
+            ], 500);
+        }
     }
     /**
      * cancel transaction.
@@ -49,6 +66,4 @@ class TransactionController extends Controller
             'message' => 'Transaction Cancle'
         ], 401);
     }
-
-
 }

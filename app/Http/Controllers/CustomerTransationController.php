@@ -15,9 +15,9 @@ class CustomerTransationController extends Controller
      */
     public function searchCustomerTransaction($id)
     {
-        $customerTransaction =CustomerTransation::with(['photo','transaction'])->find($id);
-        if(!$customerTransaction){
-            return response()->json(array('error' => "Can't find the customer by id {$id}"));
+        $customerTransaction = CustomerTransation::with(['photo', 'transaction'])->find($id);
+        if (!$customerTransaction) {
+            return response()->json(array('error' => "Can't find the customer by id {$id}"), 500);
         }
         return $customerTransaction;
     }

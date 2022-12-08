@@ -4,16 +4,13 @@ namespace App\Http\Actions;
 
 use App\Http\Requests\Photo\PhotoCreateRequest;
 use App\Models\Photo;
-use Faker\Core\File;
-
-
 use Intervention\Image\Facades\Image;
 
 class PhotoAction
 {
     /**
      * Store Photo Details in Database.
-     * @param  \Illuminate\Http\Request  $request
+     * @param  PhotoCreateRequest  $request
      * @param Photo $photo
      * @param string $photo_path
      * @return Photo $obj
