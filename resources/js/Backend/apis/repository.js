@@ -60,8 +60,8 @@ const repository = () => {
     }
 
     //Image Upload
-    const uploadImage = ({ params }) => {
-        return api.post('api/image', params);
+    const uploadImage = ({ params,config }) => {
+        return api.post('api/image', params,config);
     }
     return {
         createSession,

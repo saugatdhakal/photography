@@ -34,14 +34,14 @@ class PhotoAction
     public function savePhotoInStorage($photo): string
     {
         $image = Image::make($photo, 60)->resize(
-            1250,
-            1250,
+            1000,
+            null,
             function ($constraint) {
                 $constraint->aspectRatio();
             }
         );
         $fileName = time() . '.' . $photo->extension();
-        $image->save(storage_path('app/public/images/' . $fileName), 10);
+        $image->save(storage_path('app/public/images/' . $fileName), 80);
         return $fileName;
     }
 }

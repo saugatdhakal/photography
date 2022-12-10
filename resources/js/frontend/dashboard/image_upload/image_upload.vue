@@ -3,6 +3,25 @@
     <div class="col-md-7 col-lg-6 m-2">
       <form enctype="multipart/form-data" @submit.prevent="submitHandler">
         <div class="albumCreate card card-body shadow">
+          <div v-if="uploadPercent > 0">
+            <div class="progress">
+              <div
+                class="progress-bar progress-bar-striped progress-bar-animated"
+                role="progressbar"
+                id="uploadingStatus"
+                :style="{ width: uploadPercent + '%' }"
+                aria-valuenow="10"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              >
+                {{
+                  uploadPercent < 100
+                    ? uploadPercent + "%"
+                    : "Compressing Image In Sever"
+                }}
+              </div>
+            </div>
+          </div>
           <h3 style="text-align: center">
             UPLOAD IMAGE
             <i class="bi bi-card-image" style="font-size: larger"></i>
@@ -253,6 +272,7 @@ import repository from "../../../Backend/apis/repository";
 
 const { albumList, uploadImage, createAlbum } = repository();
 const uploadingStatus = ref(false);
+const uploadPercent = ref(0);
 // List of albums fetch from the server
 const albums = ref({});
 onMounted(async () => {
@@ -278,16 +298,60 @@ const rule = {
 };
 const v$ = useVuelidate(rule, form);
 
+// Get Image when get selected
 function getImage(e) {
   form.image = e.target.files[0];
-  console.log(form.image);
 }
+// Clear Album Form
+function clearAlbumModel() {
+  // clearing Reactive Variables
+  albumForm.album_name = "";
+  albumForm.description = "";
+  //Reset vuevalidated variables
+  album$.value.$reset();
+}
+// Clear Image Form
+function clearImageModel() {
+  form.title = "";
+  form.album = "";
+  form.image = "";
+  form.capture_date = "";
+  form.price = "";
+  form.description = "";
+  v$.value.$reset();
+}
+// Set Number
+function setUploadPercent(val) {
+  uploadPercent.value = val;
+}
+
+// Set Boolen Value
+function setUploadStatus(val) {
+  uploadingStatus.value = val;
+}
+
+function resetEverything() {
+  setUploadStatus(false); //Loading Status turn off
+  setUploadPercent(0);
+  clearImageModel();
+}
+// Upload Percentage 
+let config = {
+  onUploadProgress: function (progressEvent) {
+    var percentCompleted = Math.round(
+      //   (progressEvent.loaded * 100) / progressEvent.total
+      (progressEvent.loaded / progressEvent.total) * 100
+    );
+    setUploadPercent(percentCompleted);
+  },
+};
+
 async function submitHandler(e) {
   const result = await v$.value.$validate();
   if (!result) {
     return null;
   }
-  uploadingStatus.value = true; //Loading Status turn on
+  setUploadStatus(true); //Loading Status turn on
   let data = new FormData();
   data.append("photo", form.image);
   data.append("title", form.title);
@@ -295,9 +359,9 @@ async function submitHandler(e) {
   data.append("capture_date", form.capture_date);
   data.append("price", form.price);
   data.append("description", form.description);
-  let res = await uploadImage({ params: data });
+  let res = await uploadImage({ params: data, config: config });
   if (res) {
-    uploadingStatus.value = false; //Loading Status turn off
+    resetEverything();
     toastr.success("Image Uploaded successfully");
   }
 }
@@ -311,16 +375,7 @@ const albumRule = {
   album_name: { required },
   description: { required },
 };
-
 const album$ = useVuelidate(albumRule, albumForm);
-
-function clearAlbumModel() {
-  // clearing Reactive Variables
-  albumForm.album_name = "";
-  albumForm.description = "";
-  //Reset vuevalidated variables
-  album$.value.$reset();
-}
 async function albumFormSubmit() {
   const result = await album$.value.$validate();
   if (!result) {

@@ -35,7 +35,7 @@ class TransactionController extends Controller
 
     /**
      * Start Paypal transaction
-     * @param Photo $id
+     * @param string Photo_ID
      * @return Paypal_PAYMENT_PORTAL_LINK
      */
     public function paymentSuccess(Request $request, $photo_id)

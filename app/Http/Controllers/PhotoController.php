@@ -27,7 +27,7 @@ class PhotoController extends Controller
     }
     public function allPhotos()
     {
-        $photos = Photo::select('id', 'image_path', 'title')->paginate(15);
+        $photos = Photo::select('id', 'image_path', 'title')->paginate(20);
         return $photos;
     }
     public function getPhoto($id)
