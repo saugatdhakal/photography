@@ -24,8 +24,11 @@ const repository = () => {
     ********WEBSITE APIS********
     ****************************
     */
-    const homeImages = () => {
+    const homeImages = (page) => {
         return api.get('api/photo/all');
+    }
+    const nextPageHomeImages = (pageUrl) => {
+        return api.get(pageUrl);
     }
     //
     const getImageDetails = (id) => {
@@ -74,7 +77,8 @@ const repository = () => {
         homeImages,
         getImageDetails,
         paypalPayment,
-        searchCustomerTransaction
+        searchCustomerTransaction,
+        nextPageHomeImages
 
     }
 }

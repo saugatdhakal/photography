@@ -68,18 +68,57 @@
     </div>
   </section>
   <!-- End Gallery Section -->
+  <observer
+    :option="option"
+    :observerFlag="loadNextImageFlag"
+    @observerCall="loadNextPageImages"
+  />
 </template>
 
 <script setup>
 import { onMounted, ref } from "@vue/runtime-core";
 import repository from "../../../Backend/apis/repository";
-
-const { homeImages } = repository();
+import observer from "../../components/observer.vue";
+const { nextPageHomeImages, homeImages } = repository();
+// Variables Initialization
 const datas = ref([]);
+const nextPageUrl = ref(null);
+const loadNextImageFlag = ref(false);
+const option = {
+  root: null,
+  rootMargin: "150px",
+  threshold: 1,
+};
+
 onMounted(async () => {
-  const res = await homeImages();
-  datas.value = res.data;
+  loadImages();
 });
+
+async function loadNextPageImages() {
+  if (!nextPageUrl.value) {
+    // if nextPageUrl is null
+    loadNextImageFlag.value = false;
+    return;
+  }
+  const res = await nextPageHomeImages(nextPageUrl.value);
+  datas.value = [...datas.value, ...res.data];
+  nextPageUrl.value = res.next_page_url;
+}
+
+async function loadImages() {
+  const res = await homeImages();
+  if (!res.data) {
+    console.log("Error Empty Responses");
+    return;
+  }
+  datas.value = res.data;
+  nextPageUrl.value = res.next_page_url;
+  if (!nextPageUrl.value) {
+    loadNextImageFlag.value = false; // Don't Observe
+    return;
+  }
+  loadNextImageFlag.value = true;
+}
 </script>
 
 <style >

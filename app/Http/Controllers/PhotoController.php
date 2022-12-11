@@ -25,9 +25,12 @@ class PhotoController extends Controller
     public function index()
     {
     }
-    public function allPhotos()
+    public function allPhotos(Request $request)
     {
-        $photos = Photo::select('id', 'image_path', 'title')->paginate(20);
+        // if request empty return 1 for page
+        $PAGE = ($request)?$request->page:1;
+        $photos = Photo::select('id', 'image_path', 'title')->paginate(
+            $perPage=20, $columns = ['*'], $pageName = 'photos',$PAGE);
         return $photos;
     }
     public function getPhoto($id)
