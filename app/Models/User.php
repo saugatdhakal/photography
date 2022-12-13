@@ -71,16 +71,15 @@ class User extends Authenticatable
             $user = DB::table('personal_access_tokens')->find($id);//if not found throw errow so catch throw try catch
             $remainigdays = self::remaningDays($user->expires_at); // Get Remaning days
             // Return true if day left < 0
-
             if($remainigdays <= 0){
                self::deleteToken($id);
-               return 'true';
+               return true;
             }else{
                 return 'false';
             }
         }
         catch(Exception $e){ //If id is not found then return token expired status true
-            return 'true';
+            return true;
         }
 
 

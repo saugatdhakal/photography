@@ -1,24 +1,13 @@
 <template>
   <div class="container-fluid" style="width: 100%; margin: 0; padding: 0">
     <div class="d-flex">
+      <!-- small nav -->
       <div
         class="sideBar d-flex flex-column wrap"
         id="sideBar"
         style="top: 5px"
         :class="smallNav ? '' : 'sideBar-hidden'"
       >
-        <i
-          class="clickListSmallSide bi bi-list d-flex mt-2"
-          id="clickListSmallSide"
-          @click="smallNavClick"
-          style="
-          font-size: 1.5rem;
-            cursor: pointer;
-            margin-bottom: 15px;
-            color: black;
-            justify-content: center;
-          "
-        ></i>
         <ul style="list-style: none; padding: 0">
           <li class="liText">
             <a href="">
@@ -52,6 +41,7 @@
           </li>
         </ul>
       </div>
+      <!-- large Nav -->
       <div
         class="fullSideNav d-flex flex-column wrap"
         :class="largeNav ? '' : 'fullSideNav-hidden'"
@@ -97,7 +87,25 @@
           </li>
         </ul>
       </div>
-      <div class="bodyContent" style="width:100%">
+      <div class="bodyContent" style="width: 100%">
+        <nav class="navbar navbar-light bg-light">
+          <div class="container-fluid">
+            <a class="navbar-brand" >
+              <i
+                class="clickListSmallSide bi bi-list d-flex mt-2"
+                id="clickListSmallSide"
+                @click="smallNavClick"
+                style="
+                  font-size: 1.5rem;
+                  cursor: pointer;
+                  margin-bottom: 15px;
+                  color: black;
+                  justify-content: center;
+                "
+              ></i>
+            </a>
+          </div>
+        </nav>
         <div class="container-fluid">
           <slot></slot>
         </div>
@@ -109,8 +117,8 @@
 <script setup>
 import { ref } from "@vue/reactivity";
 // For Toggling the sideNave var
-const smallNav = ref(true);
-const largeNav = ref(false);
+const smallNav = ref(false);
+const largeNav = ref(true);
 
 function smallNavClick() {
   smallNav.value = false;
@@ -141,7 +149,6 @@ function largeNavClick() {
   height: 100vh;
   background-color: var(--color-background);
   padding: 10px;
-
   border-right: solid 1px black;
 }
 .fullSideNav ul li {

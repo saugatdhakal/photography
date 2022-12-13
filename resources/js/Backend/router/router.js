@@ -116,7 +116,9 @@ router.beforeEach(async (to, from, next) => {
         const auths = authState();
         // Checking if token is expired or not if expire delete token and
         // redirect to login page
+        console.log("checking token")
         const expireStatus = await auths.checkTokenExpired();
+        console.log(expireStatus);
         if (expireStatus) {
             localStorage.removeItem('token');
             next({
@@ -126,6 +128,7 @@ router.beforeEach(async (to, from, next) => {
             });
         }
         else { // if not expire send to location where user want
+            console.log('pass')
             next();
         }
     }

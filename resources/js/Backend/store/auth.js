@@ -19,8 +19,10 @@ export const authState = defineStore('authication', {
             router.push({ name: 'adminHome' });//Navigating into the admin home page
         },
         async checkTokenExpired() {
-            console.log(localStorage.getItem('token'));
+            console.log("auth token check start token:-",localStorage.getItem('token'))
             const res = await tokenExpired(localStorage.getItem('token'));
+            console.log("🚀 ~ file: auth.js:24 ~ checkTokenExpired ~ res", res)
+            console.log(res);
             this.tokenExpired = res;
             return res;
         },

@@ -41,8 +41,14 @@ class UserController extends Controller
     }
     public function tokenStatus($token)
     {
-
+        
+        try{
         return User::checkTokenExpiers($token);
+        }
+        catch(\Exception $e){
+            return false;
+        }
+
     }
     public function logout(Request $request)
     {

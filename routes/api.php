@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 
 Route::post('/login', [UserController::class, 'login']);
+Route::get('/tokenStatus/{token}', [UserController::class, 'tokenStatus']);
 
 // Websites API's
 Route::controller(PhotoController::class)
@@ -32,10 +33,9 @@ Route::controller(CustomerTransationController::class)
         Route::get('/transaction/{id}', 'searchCustomerTransaction');
     });
 
-
 // Dashboard Public Routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
-    Route::get('/tokenStatus/{token}', [UserController::class, 'tokenStatus']);
+
 
     Route::apiResource('image', PhotoController::class);
 
@@ -45,6 +45,4 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::get('/list', 'list');
             Route::post('/create', 'create');
         });
-
-    Route::get('/tokenStatus/{token}', [UserController::class, 'tokenStatus']);
 });

@@ -67,7 +67,7 @@
 </template>
 
 <script setup>
-import {reactive } from "@vue/runtime-core";
+import { reactive } from "@vue/runtime-core";
 import useVuelidate from "@vuelidate/core";
 import { required, maxLength } from "@vuelidate/validators";
 import { authState } from "../../../Backend/store/auth";
@@ -87,13 +87,10 @@ const rule = {
 const v$ = useVuelidate(rule, form);
 
 async function submitHandler() {
-    console.log('login start')
   const result = await v$.value.$validate();
   if (!result) {
     return null;
   }
-  console.log('login validated')
-
   auths.login(form);
 }
 </script>
@@ -102,38 +99,37 @@ async function submitHandler() {
 /*--------------------------------------------------------------
   # Login Form
   --------------------------------------------------------------*/
-  .blogIcon {
-    height: 2.3rem;
-    width: 2rem;
-    background-color: purple;
-    color: white;
-    text-align: center;
-    border-radius: 3px;
-
+.blogIcon {
+  height: 2.3rem;
+  width: 2rem;
+  background-color: purple;
+  color: white;
+  text-align: center;
+  border-radius: 3px;
 }
 
 .loginHeader {
-    font-family: var(--font-default);
-    font-weight: bold;
-    font-size: 2vw;
-    color: var(--color-default)
+  font-family: var(--font-default);
+  font-weight: bold;
+  font-size: 2vw;
+  color: var(--color-default);
 }
 
 .loginBtn {
-    background-color: var(--color-primary);
-    color: var(--color-background);
-    font-size: 1.5vw;
-    border: none;
-    border-radius: 5px;
-    padding: 8px;
+  background-color: var(--color-primary);
+  color: var(--color-background);
+  font-size: 1.5vw;
+  border: none;
+  border-radius: 5px;
+  padding: 8px;
 }
 
 .loginBtn:hover {
-    background-color: #32cf93;
+  background-color: #32cf93;
 }
 
 .camera {
-    color: var(--color-primary);
+  color: var(--color-primary);
 }
 
 /* .card-holder {
