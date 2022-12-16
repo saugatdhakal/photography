@@ -6,26 +6,10 @@
         <li class="sidebar-brand">
           <a href="#"> PHOTOGRAPHY </a>
         </li>
-        <li>
-          <a href="#">Dashboard</a>
-        </li>
-        <li>
-          <a href="#">Shortcuts</a>
-        </li>
-        <li>
-          <a href="#">Overview</a>
-        </li>
-        <li>
-          <a href="#">Events</a>
-        </li>
-        <li>
-          <a href="#">About</a>
-        </li>
-        <li>
-          <a href="#">Services</a>
-        </li>
-        <li>
-          <a href="#">Contact</a>
+        <li v-for="(link,i) in navigationPath" :key="i">
+          <router-link :to="{ name: link.name }"
+            ><i :class="link.icon"></i> &nbsp;{{link.label}}</router-link
+          >
         </li>
       </ul>
     </div>
@@ -58,8 +42,15 @@
           <i class="bi bi-person-circle"></i>
         </div>
       </nav>
-      <div class="container-fluid">
-        <slot></slot> 
+      <div
+        class="container-fluid"
+        style="
+          background-color: rgb(246, 247, 251);
+          min-height: calc(100vh - 56px);
+          display: block;
+        "
+      >
+        <slot></slot>
       </div>
     </div>
     <!-- /#page-content-wrapper -->
@@ -68,8 +59,30 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "@vue/runtime-core";
 
+const navigationPath = [
+  {
+    'name':'adminHome',
+    'label':'Dashboard',
+    'icon':'bi bi-columns-gap'
+  },
+  {
+    'name':'imageupload',
+    'label':'Upload Image',
+    'icon':'bi bi-cloud-plus-fill'
+  },
+  {
+    'name':'adminHome',
+    'label':'Admin Details',
+    'icon':'bi bi-person-lines-fill'
+  },
+  {
+    'name':'adminHome',
+    'label':'Service',
+    'icon':'bi bi-tags-fill'
+  },
+
+]
 function toggleSideBar() {
   $("#wrapper").toggleClass("toggled");
 }
@@ -93,7 +106,7 @@ function toggleSideBar() {
   position: relative;
 }
 .menu i,
-.profile i {
+.profile i ,#menu-toggle i{
   font-size: 25px;
 }
 .top-nav-logo {
@@ -132,10 +145,11 @@ body {
   left: 250px;
   width: 0;
   top: 0;
-  height: 100%;
+  min-height: 100vh;
+  border-right: 1px solid gainsboro;
   margin-left: -250px;
   overflow-y: auto;
-  background: #000;
+
   -webkit-transition: all 0.5s ease;
   -moz-transition: all 0.5s ease;
   -o-transition: all 0.5s ease;
@@ -160,14 +174,15 @@ body {
 
 .sidebar-nav {
   position: absolute;
-  height: 100vh;
-  width: 250px;
+
+  width: 230px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
 .sidebar-nav li {
+
   text-indent: 20px;
   line-height: 40px;
 }
@@ -175,13 +190,15 @@ body {
 .sidebar-nav li a {
   display: block;
   text-decoration: none;
-  color: #999999;
+  color: rgb(163, 163, 174);
 }
 
-.sidebar-nav li a:hover {
+.sidebar-nav li a:hover,.sidebar-nav li a.router-link-exact-active{
   text-decoration: none;
   color: #fff;
-  background: rgba(255, 255, 255, 0.2);
+  margin: 0px 2px;
+  background: purple;
+  border-radius: 5px;
 }
 
 .sidebar-nav li a:active,
@@ -190,18 +207,23 @@ body {
 }
 
 .sidebar-nav > .sidebar-brand {
-  height: 65px;
+  height: 55px;
   font-size: 18px;
-  line-height: 60px;
+  line-height: 54px;
+  border-bottom: 1px solid gainsboro;
+  margin-bottom: 5px;
 }
 
 .sidebar-nav > .sidebar-brand a {
-  color: #999999;
+  color: #080303;
 }
 
 .sidebar-nav > .sidebar-brand a:hover {
-  color: #fff;
+  color: rgb(1, 0, 0);
   background: none;
+}
+.line-color {
+  color: rgb(187, 186, 186);
 }
 
 @media (min-width: 768px) {
