@@ -5,7 +5,7 @@ import Home from '../../frontend/website/home/home.vue';
 import About from '../../frontend/website/about/about.vue';
 import Service from '../../frontend/website/services/service.vue';
 import Contact from '../../frontend/website/contact/contact.vue';
-import adminNav from "../../frontend/dashboard/nav/admin-nav.vue";
+import adminNav from "../../frontend/dashboard/nav/nav-layout.vue";
 import { authState } from "../store/auth";
 const routes = [
     //Website
