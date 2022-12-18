@@ -92,6 +92,16 @@ const routes = [
             adminLayout: adminNav
         }
 
+    },
+    {
+        path: '/admin/details',
+        name: 'adminDetails',
+        component: () => import('../../frontend/dashboard/admin details/admin_details.vue'),
+        meta: {
+            requiresAuth: true,
+            adminLayout: adminNav
+        }
+
     }
 
 ];

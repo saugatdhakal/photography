@@ -1,5 +1,5 @@
 <template>
-  <div class="row justify-content-center">
+  <div class="row">
     <div class="col-md-7 col-lg-6 m-2">
       <form enctype="multipart/form-data" @submit.prevent="submitHandler">
         <div class="albumCreate card card-body shadow">
@@ -90,15 +90,13 @@
             {{ error.$message }}</span
           >
           <div class="mt-1">
-            <label for="formFileMultiple" class="form-label"
-              >Upload Image</label
-            >
+            <label for="imageUpload" class="form-label">Upload Image</label>
             <input
               class="form-control"
               type="file"
               accept="image/png, image/gif, image/jpeg"
               @change="getImage"
-              id="formFileMultiple"
+              id="imageUpload"
             />
           </div>
           <span
@@ -273,11 +271,16 @@ import repository from "../../../Backend/apis/repository";
 const { albumList, uploadImage, createAlbum } = repository();
 const uploadingStatus = ref(false);
 const uploadPercent = ref(0);
+
 // List of albums fetch from the server
 const albums = ref({});
-onMounted(async () => {
-  albums.value = await albumList();
+onMounted(() => {
+  getAlbumList();
 });
+async function getAlbumList() {
+  albums.value = {};
+  albums.value = await albumList();
+}
 
 const form = reactive({
   title: "",
@@ -289,11 +292,11 @@ const form = reactive({
 });
 
 const rule = {
-  title: { required },
-  album: { required },
+  title: { required, maxLength: maxLength(255) },
+  album: { required, maxLength: maxLength(255) },
   image: { required },
   capture_date: { required },
-  price: { required },
+  price: { required, maxLength: maxLength(255) },
   description: { required },
 };
 const v$ = useVuelidate(rule, form);
@@ -302,6 +305,11 @@ const v$ = useVuelidate(rule, form);
 function getImage(e) {
   form.image = e.target.files[0];
 }
+// Clear Image Input
+function clearImageInput() {
+  document.getElementById("imageUpload").value = "";
+}
+
 // Clear Album Form
 function clearAlbumModel() {
   // clearing Reactive Variables
@@ -334,8 +342,9 @@ function resetEverything() {
   setUploadStatus(false); //Loading Status turn off
   setUploadPercent(0);
   clearImageModel();
+  clearImageInput();
 }
-// Upload Percentage 
+// Upload Percentage
 let config = {
   onUploadProgress: function (progressEvent) {
     var percentCompleted = Math.round(
@@ -386,6 +395,7 @@ async function albumFormSubmit() {
     toastr.success("Album created successfully");
     clearAlbumModel();
     $("#myModal").modal("hide");
+    getAlbumList();
   }
 }
 //End Albums Model Froms

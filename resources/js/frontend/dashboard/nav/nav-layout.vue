@@ -72,7 +72,7 @@ const navigationPath = [
     'icon':'bi bi-cloud-plus-fill'
   },
   {
-    'name':'adminHome',
+    'name':'adminDetails',
     'label':'Admin Details',
     'icon':'bi bi-person-lines-fill'
   },
